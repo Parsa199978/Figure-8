@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Outcomes Pie Chart</title>
+    <title>Explanatory Factors Pie Chart</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -60,97 +60,109 @@
 <body>
 
 <div class="chart-container">
-    <h1>Distribution of Outcomes</h1>
+    <h1>Distribution of Explanatory Factors</h1>
     <div id="chart"></div>
 </div>
 
 <div class="tooltip"></div>
 
 <script>
-    // Raw data from the "Figure 8 Data.docx" document
-    const rawData = `Outcome,Number of Study IDs,Study IDs
-"Dental/Oral Condition: Dental Caries/Tooth Loss",28,"#1, #2, #3, #4, #5, #7, #8, #9, #10, #11, #12, #13, #14, #15, #16, #17, #18, #19, #20, #21, #27, #28, #29, #30, #32, #36, #2D, #5D"
-"Dental Hospitalisation (diagnoses and treatment)",5,"#1D, #2D, #5D, #6D, #8D"
-"Medical Conditions/Treatments/Presentations: Psychological and Social Health",3,"#1, #3, #11"
-"Medical Conditions/Treatments/Presentations: Cognitive Health",1,#6
-"Oral and Pharyngeal Microbiota",5,"#2, #3, #4, #13, #33"
-"Salivary Immunoglobulin",1,#2
-"Oral Function (Remaining Teeth Composition/Denture Use/Chewing/Swallowing)",2,"#6, #16"
-"Dental/Oral Condition: Periodontal Disease",5,"#3, #6, #7, #14, #29"
-"non-specific oral health",2,"#3, #33"
-"Tooth Size and Shape",1,#4
-"Orthodontic need, treatment and success (including occlusal relations)",5,"#1, #7, #10, #29, #34"
-"Tooth Eruption",2,"#4, #26"
-"Dental/Oral Condition: Dental Trauma",1,#10
-"Dental/Oral Condition: Dry Mouth",2,"#7, #14"
-"Dental/Oral Condition: Dental Wear",1,#4
-"Dental/Oral Condition: Developmental Dental Defects",7,"#4, #7, #10, #17, #18, #25, #29"
-"Dental/Oral Condition: Temporomandibular joint Disease (TMD)",1,#7
-"Dental/Oral Condition: Oral Human Papillomavirus (HPV)",1,#24
-"Dental/Oral Condition: Oral Cancer and Epithelial Dysplasia",3,"#7D, #9D, #10D"
-"Oral Hygiene, Behaviours and Beliefs",6,"#6, #7, #9, #10, #15, #30"
-"Third Molar Status and Outcome",1,#7
-"Medical Conditions/Treatments/Presentations: Heart conditions",3,"#7, #16, #4D"
-"Medical Conditions/Treatments/Presentations: Diabetes and Metabolic Disorders",2,"#7, #16"
-"Medical Conditions/Treatments/Presentations: Obesity and Weight Loss",4,"#6, #10, #15, #21"
-"Medical Conditions/Treatments/Presentations: Other",10,"#5, #7, #14, #30, #31, #33, #35, #3D, #7D, #9D"
-"Perception of Personal General Health and Needs",1,#15
-"Substance Use (Including Smoking and Alcohol)",1,#7
-"Diet and Nutrient Intake",1,#6
-"Infant Feeding",1,#23
-"Use of Dental Service",5,"#5, #6, #7, #10, #37"
-"Perception of Personal Oral Health and Needs (Including Oral Health Quality of Life)",7,"#6, #7, #9, #15, #25, #29, #34"
-"Dental Anxiety",1,#7`;
+    // Raw data from the document
+    const rawData = `Explanatory Factor,Study IDs,Number of Study IDs
+"Sociodemographic/Economic/Cultural Factors (Including Access and Use of Dental Services)","#1, #2, #3, #4, #5, #6, #7, #8, #9, #10, #11, #12, #13, #14, #15, #16, #17, #18, #19, #20, #21, #23, #24, #25, #26, #27, #28, #29, #30, #31, #32, #34, #36, #37, #1D, #2D, #4D, #5D, #6D, #8D, #9D",41
+"Anthropometric Measurements","#3, #6, #7, #10, #16, #18, #31, #35",8
+"Substance Use (Including Smoking and Alcohol)","#3, #6, #7, #14, #15, #16, #24, #29, #30, #31, #7D, #9D, #10D",13
+"Physical Activity","#6, #10",2
+"Oral Hygiene, Behaviours and Beliefs","#1, #2, #3, #4, #7, #9, #10, #11, #12, #13, #14, #15, #17, #18, #19, #20, #21, #24, #27, #28, #30, #32, #33, #36, #2D",25
+"Oral and Dental Condition/Treatment: Orthodontic Treatment, Need, and Occlusal Relations","#1, #7, #8, #11, #25, #34",6
+"Oral and Dental Condition/Treatment: Dental Caries/Extraction/ Restoration","#1, #3, #5, #6, #7, #10, #11, #16, #24, #25, #30, #31, #4D",13
+"Oral and Dental Condition/Treatment: Developmental Dental Defects","#3, #4, #13, #18, #25, #35",6
+"Oral and Dental Condition/Treatment: Periodontal Disease","#6, #7, #11, #16, #24",5
+"Oral and Dental Condition/Treatment: Dry Mouth","#6, #7, #14",3
+"Oral and Dental Condition/Treatment: Dental Trauma","#7, #11",2
+"Oral and Dental Condition/Treatment: Temporomandibular joint Disease (TMD)",#7,1
+"Oral and Dental Condition/Treatment: Oral Cancer","#7D, #9D",2
+"Oral and Dental Condition/Treatment: Oral Lichen Planus and Lichenoid Lesions (OLP/OLL)",#10D,1
+"Oral and Dental Condition/Treatment: Other","#11, #12",2
+"Perception of Personal Oral Health and Needs (Including Oral Health Quality of Life)","#1, #3, #5, #6, #7, #16, #19, #24, #31",9
+"Oral Function (Remaining Teeth Composition/Denture Use/Chewing/Swallowing/Other)","#6, #7, #14, #24, #31",5
+"Oral Parafunction (Grinding/Clenching/Other)",#7,1
+"Diet and Nutrient Intake","#2, #3, #4, #9, #10, #11, #12, #15, #16, #17, #18, #20, #21, #27, #28, #36, #2D",17
+"Infant Feeding","#2, #4, #10, #11, #13, #15, #17, #18, #19, #20, #21, #36",12
+"Oral Microbiota","#8, #13, #19, #36",4
+"Salivary pH",#8,1
+"Parental Health and Habits","#1, #2, #7, #8, #10, #11, #12, #13, #15, #18, #19, #20, #30, #32, #36, #6D",16
+"Perception of Personal General Health and Needs","#6, #19, #24",3
+"Medical Conditions/Treatments/Presentations: Childhood Infection and Antibiotics","#2, #4, #7, #18",4
+"Medical Conditions/Treatments/Presentations: Diabetes and Metabolic Disorders","#14, #16",2
+"Medical Conditions/Treatments/Presentations: Premature Birth, Birth Weight, and other Peri-birth issues","#2, #4, #8, #11, #18, #19, #20, #26, #29, #30, #32",11
+"Medical Conditions/Treatments/Presentations: Intelligence and Cognitive Status","#7, #31, #1D",3
+"Medical Conditions/Treatments/Presentations: Disability","#10, #37",2
+"Medical Conditions/Treatments/Presentations: Psychological Health and Personality Traits","#7, #16, #31",3
+"Medical Conditions/Treatments/Presentations: Other","#4, #6, #7, #12, #14, #15, #16, #18, #24, #26, #31, #33, #2D, #6D, #8D, #10D",16
+"Tooth Eruption","#2, #4, #13",3
+"Tooth Exfoliation",#7,1
+"Dental Anxiety","#3, #7",2
+"Genetics","#4, #7, #18",3
+"Fluoride Sources","#5, #7, #10, #12, #17, #20, #25, #27, #28, #30, #36, #2D",12
+"Radiographic Position of Third Molars",#7,1
+"Amalgam Exposure",#3D,1`;
 
-    // Custom order from the "Outcome Order.docx" file
-    const customOrder = `Left to Right:
-Dental/Oral Condition: Dental Caries/Tooth Loss
-Dental/Oral Condition: Periodontal Disease
-Dental/Oral Condition: Developmental Dental Defects
-Dental/Oral Condition: Dental Trauma
-Dental/Oral Condition: Dry Mouth
-Dental/Oral Condition: Dental Wear
-Dental/Oral Condition: Temporomandibular joint Disease (TMD)
-Dental/Oral Condition: Oral Cancer and Epithelial Dysplasia
-Dental/Oral Condition: Oral Human Papillomavirus (HPV)
-Dental Hospitalisation (diagnoses and treatment)
-Orthodontic need, treatment and success (including occlusal relations)
-Oral Function (Remaining Teeth Composition/Denture Use/Chewing/Swallowing)
-Tooth Eruption
-Tooth Size and Shape
-Third Molar Status and Outcome
-Oral and Pharyngeal Microbiota
-Salivary Immunoglobulin
-Perception of Personal Oral Health and Needs (Including Oral Health Quality of Life)
-Dental Anxiety
+    const customOrder = `Up to Down:
+Sociodemographic/Economic/Cultural Factors (Including Access and Use of Dental Services)
+Substance Use (Including Smoking and Alcohol)
 Oral Hygiene, Behaviours and Beliefs
-Use of Dental Service
-non-specific oral health
-Medical Conditions/Treatments/Presentations: Heart conditions
+Oral and Dental Condition/Treatment: Dental Caries/Extraction/ Restoration
+Oral and Dental Condition/Treatment: Developmental Dental Defects
+Oral and Dental Condition/Treatment: Periodontal Disease
+Oral and Dental Condition/Treatment: Dry Mouth
+Oral and Dental Condition/Treatment: Dental Trauma
+Oral and Dental Condition/Treatment: Orthodontic Treatment, Need, and Occlusal Relations
+Oral and Dental Condition/Treatment: Temporomandibular joint Disease (TMD)
+Oral and Dental Condition/Treatment: Oral Cancer
+Oral and Dental Condition/Treatment: Oral Lichen Planus and Lichenoid Lesions (OLP/OLL)
+Oral and Dental Condition/Treatment: Other
+Perception of Personal Oral Health and Needs (Including Oral Health Quality of Life)
+Oral Function (Remaining Teeth Composition/Denture Use/Chewing/Swallowing/Other)
+Oral Parafunction (Grinding/Clenching/Other)
+Oral Microbiota
+Salivary pH
+Tooth Eruption
+Tooth Exfoliation
+Fluoride Sources
+Radiographic Position of Third Molars
+Amalgam Exposure
+Dental Anxiety
+Medical Conditions/Treatments/Presentations: Childhood Infection and Antibiotics
 Medical Conditions/Treatments/Presentations: Diabetes and Metabolic Disorders
-Medical Conditions/Treatments/Presentations: Obesity and Weight Loss
-Medical Conditions/Treatments/Presentations: Psychological and Social Health
-Medical Conditions/Treatments/Presentations: Cognitive Health
+Medical Conditions/Treatments/Presentations: Premature Birth, Birth Weight, and other Peri-birth issues
+Medical Conditions/Treatments/Presentations: Psychological Health and Personality Traits
+Medical Conditions/Treatments/Presentations: Intelligence and Cognitive Status
+Medical Conditions/Treatments/Presentations: Disability
 Medical Conditions/Treatments/Presentations: Other
 Perception of Personal General Health and Needs
+Anthropometric Measurements
 Diet and Nutrient Intake
 Infant Feeding
-Substance Use (Including Smoking and Alcohol)`.split('\n').slice(1).map(s => s.trim());
+Physical Activity
+Parental Health and Habits
+Genetics`.split('\n').slice(1).map(s => s.trim().replace(/\s\s+/g, ' ')); // Clean up and normalize spaces
 
     // Parse the original data
     const data = d3.csvParse(rawData, (d) => {
         return {
-            outcome: d['Outcome'].trim(),
-            count: +d['Number of Study IDs'],
-            studyIds: d['Study IDs']
+            factor: d['Explanatory Factor'].trim().replace(/\s\s+/g, ' '), // Normalize spaces here too
+            studyIds: d['Study IDs'],
+            count: +d['Number of Study IDs']
         };
     });
 
-    // Create a map of the data for easy lookup
-    const dataMap = new Map(data.map(d => [d.outcome, d]));
+    // Create a map for quick lookup
+    const dataMap = new Map(data.map(d => [d.factor, d]));
 
     // Create the sorted data array based on the custom order
-    const sortedData = customOrder.map(outcome => dataMap.get(outcome)).filter(d => d);
+    const sortedData = customOrder.map(factor => dataMap.get(factor)).filter(d => d);
+
 
     // Chart dimensions
     const width = 500;
@@ -167,12 +179,12 @@ Substance Use (Including Smoking and Alcohol)`.split('\n').slice(1).map(s => s.t
         .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
     // Color scale
-    const color = d3.scaleOrdinal(d3.schemePaired);
+    const color = d3.scaleOrdinal(d3.schemeTableau10);
 
     // Pie generator
     const pie = d3.pie()
         .value(d => d.count)
-        .sort(null); // Data is pre-sorted
+        .sort(null); // Data is pre-sorted, so no need for d3 to sort
 
     const data_ready = pie(sortedData); // Use the sorted data
 
@@ -189,7 +201,7 @@ Substance Use (Including Smoking and Alcohol)`.split('\n').slice(1).map(s => s.t
         .data(data_ready)
         .join('path')
         .attr('d', arc)
-        .attr('fill', d => color(d.data.outcome))
+        .attr('fill', d => color(d.data.factor))
         .attr("stroke", "white")
         .style("stroke-width", "2px")
         .style("opacity", 0.8)
@@ -201,7 +213,8 @@ Substance Use (Including Smoking and Alcohol)`.split('\n').slice(1).map(s => s.t
               .attr('transform', 'scale(1.05)');
 
             tooltip.transition().duration(200).style("opacity", .9);
-            tooltip.html(`<strong>${d.data.outcome}</strong>Number of Study IDs: ${d.data.count}<br>Study IDs: ${d.data.studyIds}`)
+            // UPDATED THIS LINE to include the count
+            tooltip.html(`<strong>${d.data.factor}</strong>Number of Study IDs: ${d.data.count}<br>Study IDs: ${d.data.studyIds}`)
                 .style("left", (event.pageX + 15) + "px")
                 .style("top", (event.pageY - 28) + "px");
         })
